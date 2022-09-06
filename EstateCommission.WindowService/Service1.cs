@@ -1,4 +1,5 @@
-﻿using Quartz;
+﻿using EstateCommission.Business;
+using Quartz;
 using Quartz.Impl;
 using System;
 using System.Collections.Generic;
@@ -22,23 +23,39 @@ namespace EstateCommission.WindowService
 
         protected override void OnStart(string[] args)
         {
-            IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
-            scheduler.Start();
+            try
+            {
+                IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
+                scheduler.Start();
 
 
-            IJobDetail job = JobBuilder.Create<MyJob>().Build();
+                IJobDetail job = JobBuilder.Create<MyJob>().Build();
 
-            ITrigger trigger = TriggerBuilder.Create()
-                   .WithSimpleSchedule(a => a.WithIntervalInMinutes(Convert.ToInt32(ConfigurationManager.AppSettings["TimeIntervalInMinutes"])).RepeatForever())
-                   .Build();
+                ITrigger trigger = TriggerBuilder.Create()
+                       .WithSimpleSchedule(a => a.WithIntervalInMinutes(Convert.ToInt32(ConfigurationManager.AppSettings["TimeIntervalInMinutes"])).RepeatForever())
+                       .Build();
 
-            scheduler.ScheduleJob(job, trigger);
+                scheduler.ScheduleJob(job, trigger);
+            }
+            catch(Exception ex)
+            {
+                LogManager.Log(ex);
+            }
         }
 
         protected override void OnStop()
         {
-            IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
-            scheduler.Shutdown();
+            try
+            {
+                IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
+                scheduler.Shutdown();
+            }
+            catch (Exception ex)
+            {
+
+                LogManager.Log(ex);
+            }
+            
         }
     }
 }

@@ -14,7 +14,8 @@ namespace EstateCommission.WindowService
         {
             try
             {
-                EstateCommissionProcess.ProcessEstateCommision();
+                //EstateCommissionProcess.ProcessEstateCommision();
+                LogManager.Log(DateTime.Now.ToString());
             }
             catch(Exception ex)
             {
